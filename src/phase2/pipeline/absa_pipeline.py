@@ -30,6 +30,10 @@ class ABSAPipeline:
         task_labels = []
         
         for key_word, _ in keywords:
+            ignore_words = {"game", "games", "play", "playing", "steam"}
+            if key_word.lower() in ignore_words:
+                continue
+            
             category = self.mapper.get_category(key_word)
             opinion = self.mapper.get_opinion(review_text)
             sentiment = self.mapper.get_sentiment(review_text)
@@ -82,7 +86,7 @@ class ABSAPipeline:
                     if len(game_groups[game]["reviews"]) < self.max_reviews_per_game:
                         game_groups[game]["reviews"].append(item["review_text"])
                         game_groups[game]["aspects"].extend(item["aspects"])
-                        game_groups[game]["labels"].extend(item["task_labels"])
+                        game_groups[game]["labels"] = list(dict.fromkeys(game_groups[game]["labels"] + item["task_labels"]))
 
             output = {}
         

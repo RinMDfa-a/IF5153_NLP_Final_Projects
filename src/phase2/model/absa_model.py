@@ -1,4 +1,5 @@
 import json
+import os
 import torch
 from torch.utils.data import Dataset, DataLoader
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM,  BartTokenizer, BartForConditionalGeneration, Seq2SeqTrainer, Seq2SeqTrainingArguments, DataCollatorForSeq2Seq
@@ -90,7 +91,7 @@ class ABSAT5Model:
             logging_steps=10,
             save_total_limit=3,
             num_train_epochs=epochs,
-            save_strategy="epoch",
+            save_strategy="no",
             predict_with_generate=True,
             fp16=torch.cuda.is_available(),
             report_to="none"
@@ -128,6 +129,9 @@ class ABSAT5Model:
                 **inputs,
                 max_length=128,
                 num_beams=2,
+                no_repeat_ngram_size=3,
+                repetition_penalty=1.5,
+                early_stopping=True
             )
         
         prediction = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
@@ -146,8 +150,15 @@ class ABSABartModel:
             
             self.model_name = model_name
             self.model_save_dir = model_save_dir
-            self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-            self.model = AutoModelForSeq2SeqLM.from_pretrained(model_name).to(self.device)
+            
+            if os.path.exists(os.path.join(model_save_dir, "config.json")):
+                load_path = model_save_dir
+            else:
+                load_path = model_name
+                
+           
+            self.tokenizer = AutoTokenizer.from_pretrained(load_path)
+            self.model = AutoModelForSeq2SeqLM.from_pretrained(load_path).to(self.device)
             
     def _build_prompt(self, review_text):
         return(
@@ -193,7 +204,7 @@ class ABSABartModel:
             logging_steps=10,
             save_total_limit=3,
             num_train_epochs=epochs,
-            save_strategy="epoch",
+            save_strategy="no", 
             predict_with_generate=True,
             fp16=torch.cuda.is_available(),
             report_to="none"
@@ -231,6 +242,9 @@ class ABSABartModel:
                 **inputs,
                 max_length=128,
                 num_beams=2,
+                no_repeat_ngram_size=3, 
+                repetition_penalty=1.5,
+                early_stopping=True
             )
         
         prediction = self.tokenizer.decode(outputs[0], skip_special_tokens=True)

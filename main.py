@@ -17,21 +17,21 @@ if __name__ == "__main__":
         )
         pipeline.run()
         
-    t5_model = ABSAT5Model(
-        model_name="t5-base",
-        model_save_dir=MODEL_SAVE_DIR
-    )
+    # t5_model = ABSAT5Model(
+    #     model_name="t5-base",
+    #     model_save_dir=MODEL_SAVE_DIR
+    # )
     
-    t5_model.train(JSON_OUTPUT_FILE, epochs=3, batch_size=4, lr=5e-5)
+    # t5_model.train(JSON_OUTPUT_FILE, epochs=3, batch_size=4, lr=5e-5)
     
-    with open(JSON_OUTPUT_FILE, "r", encoding="utf-8") as f:
-        label_data = json.load(f)
+    # with open(JSON_OUTPUT_FILE, "r", encoding="utf-8") as f:
+    #     label_data = json.load(f)
     
-    sample_game = label_data["1"]
-    sample_review = "".join(sample_game["reviews"])
-    expected_label = sample_game.get("targer_label", "")
+    # sample_game = label_data["1"]
+    # sample_review = "".join(sample_game["reviews"])
+    # expected_label = sample_game.get("targer_label", "")
     
-    result = t5_model.predict(sample_review)
-    print(f"Game: {sample_game['app_name']}")
-    print(f"Expected Label: {expected_label}")
-    print(f"Predicted Label: {result}")
+    # result = t5_model.predict(sample_review)
+    # print(f"Game: {sample_game['app_name']}")
+    # print(f"Expected Label: {expected_label}")
+    # print(f"Predicted Label: {result}")
