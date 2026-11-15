@@ -157,8 +157,8 @@ class ABSABartModel:
                 load_path = model_name
                 
            
-            self.tokenizer = AutoTokenizer.from_pretrained(load_path)
-            self.model = AutoModelForSeq2SeqLM.from_pretrained(load_path).to(self.device)
+            self.tokenizer = BartTokenizer.from_pretrained(load_path)
+            self.model = BartForConditionalGeneration.from_pretrained(load_path).to(self.device)
             
     def _build_prompt(self, review_text):
         return(
