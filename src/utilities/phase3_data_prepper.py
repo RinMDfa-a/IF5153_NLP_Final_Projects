@@ -1,6 +1,5 @@
-import os 
-import http
 import json
+
 import requests
 
 example_data = {
