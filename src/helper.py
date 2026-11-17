@@ -116,6 +116,7 @@ def Summarizer_menu():
         print("Masukkan nama direktori (relatif dari posisi program dijalankan) dimana file masukkan untuk model summarizer \nsudah sesuai dengan format yang ditentukan.")
         directory = file_directory_input_retryer()
         data = Input_Parser(Summarizer_menu, directory=directory, prev_data=None)
+        print(data)
         print(Summarizer(data))
         action_transition()
     else:
@@ -133,10 +134,16 @@ def Pipeline_menu():
 def Input_Parser(func: object, directory: str | None, prev_data: str | None):
     """Helper untuk melakukan parsing atau membaca file untuk melakukan demo per fase
     baik untuk contoh per fase atau full pipeline."""
+    function = function_matcher(func)
 
-    match func:
+    match function:
         case f if f is Functions.SUMMARIZE_MENU.name:
-            # placeholder
+            lines = []
+            with open(directory, mode="r") as file:
+                for line in file:
+                    lines.append(line)
+            return {'content': " ".join(lines)}
+        case f if f is Functions.PIPELINE_MENU.name:
             return "parser result"
 
 

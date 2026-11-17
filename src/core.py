@@ -1,4 +1,4 @@
-# from conf import settings
+from conf import settings
 
 import requests
 import json
@@ -11,7 +11,13 @@ def ABSA(func:object):
 
 def Summarizer(formatted_data: any) -> str:
     """Fungsi utama yang melakukan calling via endpoint ngrok buat calling model"""
-    return "Hello this is the summary"
+    try:
+        resp = requests.post(f"{settings.PHASE_3_BASE_ENDPOINT}/inference", json=formatted_data)
+        resp.raise_for_status()
+        data = resp.json()
+        return data
+    except requests.exceptions.HTTPError as erh:
+        return erh.args[0]
 
 def Pipeline():
     pass

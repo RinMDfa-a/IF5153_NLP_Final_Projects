@@ -38,6 +38,7 @@ class PseudoSummaryDataPrepper:
             answer = requests.post(self.url, json=prompt)
             results[key]["reviews"] = f"Summarize based on Reviews: {Reviews}; Aspects: {Aspects}"
             results[key]["summary"] = answer.json()["choices"][0]["message"]["content"]
+            results[key]["ground_factual"] = f"{Reviews}"
 
         self.generation_result = results
 
