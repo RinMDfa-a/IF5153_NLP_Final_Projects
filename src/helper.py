@@ -1,16 +1,9 @@
+import os
 import sys
-from enum import Enum, auto
 
 from core import *
+from enums import Enum, Functions
 
-
-class Functions(Enum):
-    MENU = auto()
-    DEMO_MENU = auto()
-    ABSA_MENU = auto()
-    NLI_MENU = auto()
-    SUMMARIZE_MENU = auto()
-    PIPELINE_MENU = auto()
 
 def function_matcher(func) -> Enum.name:
     """Helper buat mengembalikan tipe fungsi untuk mempermudah routing"""
@@ -19,13 +12,13 @@ def function_matcher(func) -> Enum.name:
             return Functions.MENU.name
         case f if f is demo_menu:
             return Functions.DEMO_MENU.name
-        case f if f is NLI:
+        case f if f is NLI_menu:
             return Functions.NLI_MENU.name
-        case f if f is ABSA:
+        case f if f is ABSA_menu:
             return Functions.ABSA_MENU.name
-        case f if f is Summarizer:
+        case f if f is Summarizer_menu:
             return Functions.SUMMARIZE_MENU.name
-        case f if f is Pipeline:
+        case f if f is Pipeline_menu:
             return Functions.PIPELINE_MENU.name
 
 def greetings() -> None: 
@@ -62,12 +55,19 @@ def router(choice: any, func: object) -> None:
                 sys.exit()
         case f if f is Functions.DEMO_MENU.name:
             if choice == 1:
-                sys.exit()
-            if choice == 5:
+                NLI_menu()
+            elif choice == 2:
+                ABSA_menu()
+            elif choice == 3:
+                Summarizer_menu()
+            elif choice == 4:
+                Pipeline_menu() 
+            else:
                 menu()
         
 def action_transition() -> None:
     print("Aksi telah selesai, anda akan dikembalikan ke menu.")
+    menu()
 
 def input_retryer(valid_options: list):
     """Helper buat loop masukkan input sesuai dengan pilihan yang tersedia."""
@@ -78,15 +78,68 @@ def input_retryer(valid_options: list):
             continue
         else: return int(response)
 
+def file_directory_input_retryer():
+    """Helper buat loop masukkan input nama direktori"""
+    while True:
+        file_directory = input().rstrip()
+        if not os.path.exists(file_directory):
+            print("file tidak ditemukan.")
+            continue
+        else: return file_directory
+
 def input_handler(func: object):
     """Handler error sekaligus input."""
     function = function_matcher(func)
 
     match function:
         case f if f is Functions.MENU.name:
-            resp = input_retryer(["1", "2"])
-            return resp
+            return input_retryer(["1", "2"])
         case f if f is Functions.DEMO_MENU.name:
-            resp = input_retryer(["1", "2", "3", "4", "5"])
-            return resp
-        
+            return input_retryer(["1", "2", "3", "4", "5"])
+        case f if f is Functions.SUMMARIZE_MENU.name:
+            return input_retryer(["1", "2"])
+
+def NLI_menu():
+    pass
+
+def ABSA_menu():
+    pass
+
+def Summarizer_menu():
+    print("Tekan angka yang tersedia untuk melakukan aksi:")
+    print("1. Uji coba summarizer")
+    print("2. Kembali")
+
+    choice = input_handler(Summarizer_menu)
+
+    if choice == 1:
+        print("Masukkan nama direktori (relatif dari posisi program dijalankan) dimana file masukkan untuk model summarizer \nsudah sesuai dengan format yang ditentukan.")
+        directory = file_directory_input_retryer()
+        data = Input_Parser(Summarizer_menu, directory=directory, prev_data=None)
+        print(Summarizer(data))
+        action_transition()
+    else:
+        router(choice, Summarizer_menu)
+
+def Pipeline_menu():
+    print("Tekan angka yang tersedia untuk melakukan aksi:")
+    print("1. Uji coba pipeline")
+    print("2. Kembali")
+
+    choice = input_handler(Pipeline_menu)
+    router(choice, Pipeline_menu)
+
+# TODO buat parser file.txt and parser hasil output model lain
+def Input_Parser(func: object, directory: str | None, prev_data: str | None):
+    """Helper untuk melakukan parsing atau membaca file untuk melakukan demo per fase
+    baik untuk contoh per fase atau full pipeline."""
+
+    match func:
+        case f if f is Functions.SUMMARIZE_MENU.name:
+            # placeholder
+            return "parser result"
+
+
+
+
+    

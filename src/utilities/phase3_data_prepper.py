@@ -1,5 +1,8 @@
 import json
+import os
+from collections import defaultdict
 
+import pandas as pd
 import requests
 
 example_data = {
@@ -14,13 +17,14 @@ class PseudoSummaryDataPrepper:
         self.generation_result = None
 
     def generate(self) -> None:
-        result = {}
         with open(self.data_path, "r") as file:
             data = json.load(file)
 
+        results = defaultdict(dict)
         for key in data:
-            Aspects = "\n".join(f"- {aspect}" for aspect in data[key]["aspects"])
-            Reviews = "\n".join(f"- {review}" for review in data[key]["reviews"])
+
+            Aspects = " ".join(f"{aspect}" for aspect in data[key]["aspects"])
+            Reviews = " ".join(f"{review}" for review in data[key]["reviews"])
            
             prompt = {
                "messages": [
@@ -32,18 +36,25 @@ class PseudoSummaryDataPrepper:
             # print(prompt)
 
             answer = requests.post(self.url, json=prompt)
-            result[key] = answer.json()
+            results[key]["reviews"] = f"Summarize based on Reviews: {Reviews}; Aspects: {Aspects}"
+            results[key]["summary"] = answer.json()["choices"][0]["message"]["content"]
 
-        self.generation_result = result
+        self.generation_result = results
 
-
-    def save(self):
-        pass
+    def save(self, save_path):
+        if not os.path.exists("../../data"):
+            os.makedirs(save_path, exist_ok=True)
+        df = pd.DataFrame.from_dict({
+            "summary_instruction": [self.generation_result[key]["reviews"] for key in self.generation_result],
+            "target": [self.generation_result[key]["summary"] for key in self.generation_result]
+        })
+        df.to_csv(f"../../data/{save_path}", index=False)
 
 
 if __name__ == "__main__":
     test_generator = PseudoSummaryDataPrepper(url="http://localhost:8080/v1/chat/completions", data_path="../../data/example_phase2_data.json")
     test_generator.generate()
+    test_generator.save("phase3dataset.csv")
 
-    print(json.dumps(test_generator.generation_result, indent=4))
+    # print(json.dumps(test_generator.generation_result, indent=4))
 
