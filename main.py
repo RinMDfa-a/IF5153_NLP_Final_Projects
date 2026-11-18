@@ -6,14 +6,17 @@ from src.phase2.model.absa_model import ABSAT5Model, ABSABartModel
 if __name__ == "__main__":
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     
-    INPUT_FILE = os.path.join(BASE_DIR, "data", "raw", "dataset.csv")
-    JSON_OUTPUT_FILE = os.path.join(BASE_DIR, "data", "preprocessed", "dataset_labeled.jsonl")
+    # INPUT_FILE = os.path.join(BASE_DIR, "data", "raw", "dataset.csv")
+    # JSON_OUTPUT_FILE = os.path.join(BASE_DIR, "data", "preprocessed", "dataset_labeled.jsonl")
+    
+    INPUT_FILE = os.path.join(BASE_DIR, "data", "raw", "relevant_reviews.parquet")
+    JSON_OUTPUT_FILE = os.path.join(BASE_DIR, "data", "preprocessed", "relevant_reviews_labeled.jsonl")
     MODEL_SAVE_DIR = os.path.join(BASE_DIR, "models", "t5")
     
     if not os.path.exists(JSON_OUTPUT_FILE):
         pipeline = ABSAPipeline(
-            input_file=os.path.join(BASE_DIR, "data", "raw", "dataset.csv"),
-            output_file=os.path.join(BASE_DIR, "data", "preprocessed", "dataset_labeled.jsonl")
+            input_file=INPUT_FILE,
+            output_file=JSON_OUTPUT_FILE
         )
         pipeline.run()
         

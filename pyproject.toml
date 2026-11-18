@@ -10,6 +10,7 @@ dependencies = [
     "jupyter>=1.1.1",
     "matplotlib>=3.11.2",
     "pandas>=3.1.1",
+    "pyarrow>=26.0.1",
     "tabulate>=0.10.0",
     "torch>=2.14.1",
     "transformers>=5.23.0",
