@@ -1,7 +1,9 @@
-from conf import settings
+import json
 
 import requests
-import json
+
+from conf import settings
+
 
 def NLI(func:object):
     pass
