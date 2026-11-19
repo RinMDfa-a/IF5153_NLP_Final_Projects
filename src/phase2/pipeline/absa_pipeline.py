@@ -8,7 +8,7 @@ from collections import defaultdict
 import os
 
 class ABSAPipeline:
-    def __init__(self, input_file, output_file, chunk_size=10000, max_reviews_per_game=8, max_games=500, min_relevance=0.4):
+    def __init__(self, input_file, output_file, chunk_size=10000, max_reviews_per_game=10, max_games=3000, min_relevance=0.4):
         self.input_file = input_file
         self.output_file = output_file
         self.chunk_size = chunk_size
