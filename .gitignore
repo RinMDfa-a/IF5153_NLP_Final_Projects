@@ -1,3 +1,4 @@
-data/raw
+data/phase2/raw
 .venv
+.env
 models
