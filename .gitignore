@@ -1,4 +1,4 @@
-data/phase2/raw
+
 .venv
 .env
 models__pycache__/
@@ -14,6 +14,12 @@ data/*
 !data/phase1/
 data/phase1/*
 !data/phase1/game_context.parquet
+data/phase2/*
+!data/phase2/
+data/phase2/raw/*
+!data/phase2/raw/relevant_reviews.parquet
+!data/phase2/modeled
+!data/phase2/preprocessed
 
 # Trained models (~480 MB): shared via Drive. Only the small metadata files are tracked.
 models/*
@@ -26,6 +32,14 @@ models/phase1/*/*
 
 annotation/*.csv
 annotation/*.txt
+
+!models/phase2/
+models/phase2/*/model.safetensors
+!models/phase2/*/best_score.json
+!models/phase2/*/config.json
+!models/phase2/*/generation_config.json
+!models/phase2/*/tokenizer_config.json
+!models/phase2/*/tokenizer.json
 
 # Tests are kept local for now; remove this line when they should be pushed.
 tests/

@@ -33,10 +33,13 @@ class ABSADataset(Dataset):
         return model_inputs
 
 class ABSAT5Model:
-    def __init__(self, model_name="t5-small", model_save_dir="models/t5", seed=42):
+    def __init__(self, model_name="t5-small", model_save_dir="models/phase2/t5_model", seed=42):
         set_seed(seed)
         self.seed = seed
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        if torch.cuda.is_available():
+            self.device = "cuda" 
+        else:
+            self.device = "cpu"
         print(f"GPU Available: {torch.cuda.is_available()} | Using device: {self.device}")
         
         self.model_name = model_name
@@ -133,13 +136,13 @@ class ABSAT5Model:
         return self.tokenizer.decode(outputs[0], skip_special_tokens=True)
 
 class ABSABartModel:
-    
-        
-    
-    def __init__(self, model_name="facebook/bart-base", model_save_dir="models/bart", seed=42):
+    def __init__(self, model_name="facebook/bart-base", model_save_dir="models/phase2/bart_model", seed=42):
         set_seed(seed)
         self.seed = seed
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        if torch.cuda.is_available():
+            self.device = "cuda" 
+        else:
+            self.device = "cpu"
         print(f"GPU Available: {torch.cuda.is_available()} | Using device: {self.device}")
         
         self.model_name = model_name
