@@ -1,0 +1,7 @@
+{
+  "type": "cross_encoder",
+  "threshold": 0.4,
+  "model_dir": "model",
+  "label_scheme": "binary",
+  "base_model": "roberta-base"
+}

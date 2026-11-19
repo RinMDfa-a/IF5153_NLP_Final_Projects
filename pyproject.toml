@@ -1,7 +1,42 @@
 [project]
 name = "if5153-nlp-final-projects"
 version = "0.1.0"
-description = "Add your description here"
+description = "Steam review summary generation: Phase 1 relevance filtering, Phase 2 ABSA, Phase 3 summarization"
 readme = "README.md"
-requires-python = ">=3.14"
-dependencies = []
+requires-python = ">=3.11"
+dependencies = [
+    "polars>=1.0",
+    "pyarrow",
+    "numpy",
+    "pyyaml",
+    "requests",
+    "tqdm",
+    "torch>=2.5",
+    "transformers>=4.45",
+    "fastapi>=0.115",
+    "uvicorn>=0.34",
+]
+
+[project.optional-dependencies]
+# Only needed to rebuild the Phase 1 data and retrain the model, not to serve it.
+train = [
+    "pandas",
+    "scikit-learn",
+    "scipy",
+    "datasets",
+    "joblib",
+    "langdetect",
+    "fasttext-wheel",
+    "pytest",
+    "httpx",
+    "ipykernel",
+    "nbformat",
+]
+
+[[tool.uv.index]]
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu126" }
