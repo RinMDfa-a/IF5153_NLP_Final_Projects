@@ -1,4 +1,31 @@
 data/phase2/raw
 .venv
 .env
-models
+models__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.pytest_cache/
+.venv/
+venv*/
+.env
+
+# Data is too big for git (raw ~2.6 GB, interim ~1.4 GB): copy it locally, see src/phase1/README.md.
+data/*
+!data/phase1/
+data/phase1/*
+!data/phase1/game_context.parquet
+
+# Trained models (~480 MB): shared via Drive. Only the small metadata files are tracked.
+models/*
+!models/phase1/
+models/phase1/*
+!models/phase1/*/
+models/phase1/*/*
+!models/phase1/*/metrics.json
+!models/phase1/*/model_info.json
+
+annotation/*.csv
+annotation/*.txt
+
+# Tests are kept local for now; remove this line when they should be pushed.
+tests/

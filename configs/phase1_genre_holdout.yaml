@@ -1,0 +1,12 @@
+# Domain-mismatch experiment: hold out whole primary genres for test.
+extends: phase1.yaml
+
+run_name: cross_genre
+
+paths:
+  processed_dir: data/processed_genre_holdout
+
+split:
+  mode: genre_holdout
+  ratios: [0.9, 0.1, 0.0]   # train / val; every game of a held-out genre goes to test
+  holdout_genres: []        # TODO(team): pick one or two primary genres (open decision)
