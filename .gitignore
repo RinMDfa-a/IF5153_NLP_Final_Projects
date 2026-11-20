@@ -14,12 +14,17 @@ data/*
 !data/phase1/
 data/phase1/*
 !data/phase1/game_context.parquet
-data/phase2/*
+
+data/*
 !data/phase2/
+data/phase2/*
+!data/phase2/raw/
 data/phase2/raw/*
 !data/phase2/raw/relevant_reviews.parquet
-!data/phase2/modeled
-!data/phase2/preprocessed
+!data/phase2/preprocessed/
+!data/phase2/preprocessed/**
+!data/phase2/modeled/
+!data/phase2/modeled/**
 
 # Trained models (~480 MB): shared via Drive. Only the small metadata files are tracked.
 models/*
