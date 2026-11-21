@@ -3,10 +3,12 @@ name = "if5153-nlp-final-projects"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.12"
 dependencies = [
+    "google-genai>=3.6.1",
     "pandas>=3.1.1",
     "pydantic>=2.14.3",
     "pydantic-settings>=2.16.3",
+    "python-dotenv>=1.2.4",
     "requests>=2.34.2",
 ]
