@@ -6,20 +6,20 @@
   "f1": 0.5793991416309013,
   "accuracy": 0.6733333333333333,
   "by_pair_type": {
-    "hard_negative": {
-      "n": 210,
-      "accuracy": 0.8904761904761904,
-      "share_predicted_relevant": 0.10952380952380952
+    "random_negative": {
+      "n": 90,
+      "accuracy": 0.9111111111111111,
+      "share_predicted_relevant": 0.08888888888888889
     },
     "positive": {
       "n": 300,
       "accuracy": 0.45,
       "share_predicted_relevant": 0.45
     },
-    "random_negative": {
-      "n": 90,
-      "accuracy": 0.9111111111111111,
-      "share_predicted_relevant": 0.08888888888888889
+    "hard_negative": {
+      "n": 210,
+      "accuracy": 0.8904761904761904,
+      "share_predicted_relevant": 0.10952380952380952
     }
   },
   "run_name": "lexical_baseline",

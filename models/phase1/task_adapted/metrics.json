@@ -1,30 +1,30 @@
 {
   "n": 600,
-  "threshold": 0.4,
-  "precision": 0.8383458646616542,
-  "recall": 0.7433333333333333,
-  "f1": 0.7879858657243817,
-  "accuracy": 0.8,
+  "threshold": 0.41000000000000003,
+  "precision": 0.8725099601593626,
+  "recall": 0.73,
+  "f1": 0.79491833030853,
+  "accuracy": 0.8116666666666666,
   "by_pair_type": {
-    "random_negative": {
-      "n": 90,
-      "accuracy": 0.9444444444444444,
-      "share_predicted_relevant": 0.05555555555555555
-    },
     "positive": {
       "n": 300,
-      "accuracy": 0.7433333333333333,
-      "share_predicted_relevant": 0.7433333333333333
+      "accuracy": 0.73,
+      "share_predicted_relevant": 0.73
     },
     "hard_negative": {
       "n": 210,
-      "accuracy": 0.819047619047619,
-      "share_predicted_relevant": 0.18095238095238095
+      "accuracy": 0.861904761904762,
+      "share_predicted_relevant": 0.1380952380952381
+    },
+    "random_negative": {
+      "n": 90,
+      "accuracy": 0.9666666666666667,
+      "share_predicted_relevant": 0.03333333333333333
     }
   },
   "run_name": "task_adapted",
   "label_source": [
     "auto"
   ],
-  "val_f1_at_threshold": 0.7614104716837125
+  "val_f1_at_threshold": 0.7632277196815983
 }

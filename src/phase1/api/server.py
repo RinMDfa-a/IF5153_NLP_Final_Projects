@@ -3,8 +3,9 @@
     uvicorn src.phase1.api.server:app --port 8000        # from the repository root
     ngrok http 8000                                      # then PHASE_1_BASE_ENDPOINT=<ngrok url> in the CLI's .env
 
-Environment variables:
-  PHASE1_MODEL_DIR   model folder with model_info.json + model/      (default models/phase1/task_adapted)
+Environment variables (set them in the shell, or in `.env` at the repository root; see `.env.example`.
+A variable already set in the shell wins over `.env`):
+  PHASE1_MODEL_DIR  model folder with model_info.json + model/      (default models/phase1/task_adapted)
   PHASE1_CONFIG      config file                                       (default configs/phase1.yaml)
   PHASE1_API_KEY     if set, every /phase1/* request needs header `X-API-Key: <value>` (the ngrok URL is public)
   PHASE1_STEAM_API   "0" disables the Steam Store API fallback for app_ids missing from game_context.parquet
@@ -19,9 +20,11 @@ from __future__ import annotations
 import os
 import threading
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import Any
 
 import polars as pl
+from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -29,6 +32,8 @@ from src.phase1.inference.predict import predict_df
 from src.phase1.utils.context_text import filter_categories, make_context_text, split_semicolon, truncate_description
 from src.phase1.utils.io import load_config, resolve
 from src.phase1.utils.text_clean import strip_html
+
+load_dotenv(Path(__file__).resolve().parents[3] / ".env")  # repo root; does not override variables already set in the shell
 
 MAX_REVIEWS_PER_REQUEST = 5000
 
