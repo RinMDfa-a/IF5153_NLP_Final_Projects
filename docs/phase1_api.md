@@ -31,7 +31,7 @@ The body has the same keyed shape as the Phase 2/3 JSON files. Each game needs `
 `app_id` (looked up in `data/phase1/game_context.parquet`; unknown ids are fetched from the Steam Store API), or
 `context_text`, or `genres` + `description` (+ optional `categories`). Other keys (e.g. `aspects`) are passed through unchanged.
 
-Query parameters: `top_k` (max reviews kept per game), `min_score` (default: the threshold), `include_scored` (default true).
+Query parameters: `top_k` (max reviews kept per game), `min_score` (default: the server's `PHASE1_MIN_SCORE` if set, else the model threshold; `0` keeps every review), `include_scored` (default true).
 
 ```
 POST /phase1/filter?top_k=30
@@ -45,7 +45,8 @@ POST /phase1/filter?top_k=30
 }
 ```
 
-Response: `reviews` = the kept reviews (highest score first) and can go straight to Phase 2; `scored` = every input review.
+Response: `reviews` = the kept reviews (highest score first, cut by the score cut above and by `top_k`) and can go straight to Phase 2;
+`relevance_scores` is parallel to `reviews`; `scored` = every input review with its score and `is_relevant`.
 
 ```json
 {
