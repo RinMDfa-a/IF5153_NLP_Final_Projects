@@ -44,13 +44,22 @@ Original: Steam Reviews from
 Make sure you have uv environment being installed on your device. For uv installation, please open the uv documentation (https://docs.astral.sh/uv/):
 
 1. Install all the dependencies
-   '''uv sync'''
+
+```
+uv sync
+```
 
 2. Direct to cli.py file
-   '''cd src/'''
+
+```
+cd src/
+```
 
 3. Run the cli file directly with preinstalled python extentions from IDE or run the uv
-   '''uv run python cli.py'''
+
+```
+uv run python cli.py
+```
 
 ### Expected Results
 
