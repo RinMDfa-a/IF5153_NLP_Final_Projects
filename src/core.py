@@ -52,18 +52,33 @@ def Summarizer(app_name: str, aspects: list[dict], reviews: list[str]) -> str:
         raise
 
 def Pipeline(app_id, reviews):
-    print("Processing NLI:")
-    app_name, reviews = NLI(app_id, reviews)
+    print("=" * 60)
+    print(f"[Phase 1: NLI Filter] Input reviews: {len(reviews)}")
+    print("=" * 60)
+    app_name, filtered_reviews = NLI(app_id, reviews)
     if app_name is None:
+        print("No relevant reviews passed NLI filter.")
         return "No reviews"
-    else:
-        print("\n")
-        print("ABSA:")
-        app_name, aspects, reviews = ABSA(app_name, reviews)
-        print("\n")
-        print("Summarizer:")
-        summary = Summarizer(app_name, aspects, reviews)
-        print("\n")
-        return summary
+
+    print(f"App Name: {app_name}")
+    print(f"Kept Reviews ({len(filtered_reviews)}):")
+    for idx, rev in enumerate(filtered_reviews, 1):
+        print(f"  {idx}. {rev}")
+
+    print("\n" + "=" * 60)
+    print("[Phase 2: ABSA]")
+    print("=" * 60)
+    app_name, aspects, absa_reviews = ABSA(app_name, filtered_reviews)
+    print(f"Extracted Aspects ({len(aspects)}):")
+    for idx, aspect in enumerate(aspects, 1):
+        print(f"  {idx}. {aspect}")
+
+    print("\n" + "=" * 60)
+    print("[Phase 3: Summarizer]")
+    print("=" * 60)
+    summary = Summarizer(app_name, aspects, absa_reviews)
+    print(json.dumps(summary, indent=2, ensure_ascii=False))
+    print("=" * 60)
+    return summary
 
     
