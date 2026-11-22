@@ -11,7 +11,12 @@ class Settings(BaseSettings):
     # Nanti masing-masing endpoint harus punya endpoint buat handle overall pipeline atau
     # test satu per satu.
 
+    PHASE_1_BASE_ENDPOINT: str
+    PHASE_2_BASE_ENDPOINT: str
     PHASE_3_BASE_ENDPOINT: str
+    NGROK_PHASE_1_TOKEN: str
+    NGROK_PHASE_2_TOKEN: str
     NGROK_PHASE_3_TOKEN: str
+    PHASE1_API_KEY: str
 
 settings = Settings()

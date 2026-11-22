@@ -8,3 +8,7 @@ class Functions(Enum):
     NLI_MENU = auto()
     SUMMARIZE_MENU = auto()
     PIPELINE_MENU = auto()
+    PIPELINE = auto()
+    NLI = auto()
+    ABSA = auto()
+    SUMMARIZER = auto()
