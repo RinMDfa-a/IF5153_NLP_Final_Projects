@@ -1,0 +1,30 @@
+{
+  "n": 600,
+  "threshold": 0.0,
+  "precision": 0.5,
+  "recall": 1.0,
+  "f1": 0.6666666666666666,
+  "accuracy": 0.5,
+  "by_pair_type": {
+    "hard_negative": {
+      "n": 210,
+      "accuracy": 0.0,
+      "share_predicted_relevant": 1.0
+    },
+    "random_negative": {
+      "n": 90,
+      "accuracy": 0.0,
+      "share_predicted_relevant": 1.0
+    },
+    "positive": {
+      "n": 300,
+      "accuracy": 1.0,
+      "share_predicted_relevant": 1.0
+    }
+  },
+  "run_name": "zero_shot_nli",
+  "label_source": [
+    "auto"
+  ],
+  "val_f1_at_threshold": 0.5057900635039223
+}

@@ -1,0 +1,77 @@
+{
+    "1": {
+        "reviews": [
+            "Genshin Impact's open-world exploration is breathtaking and deeply immersive across every new region, though traveling long distances without an active stamina buff can sometimes feel tedious.",
+            "The artifact grinding system remains utterly frustrating and heavily dependent on unfair RNG layers, forcing players to dump weeks of resin without a single usable piece.",
+            "Combat mechanics feel remarkably fluid and responsive with elemental reactions, but the mobile camera lock-on feature is notoriously clunky during crowded Abyss encounters.",
+            "The orchestral soundtrack composed for each distinct nation is genuinely world-class, elevating cutscenes and ambient roaming into emotional highlights.",
+            "The gacha pity system is fairly predictable for limited characters, but the weapon banner remains predatory and punishing for low-spend players.",
+            "Co-op multiplayer functionality feels severely restricted and underbaked, as visiting friends cannot open chests, talk to key NPCs, or advance world quests together."
+        ],
+        "aspects": [
+            {"aspect": "open-world exploration", "opinion": "breathtaking and deeply immersive", "sentiment": "Positive"},
+            {"aspect": "artifact grinding system", "opinion": "frustrating and heavily dependent on unfair RNG layers", "sentiment": "Negative"},
+            {"aspect": "combat mechanics", "opinion": "fluid and responsive", "sentiment": "Positive"},
+            {"aspect": "mobile camera lock-on feature", "opinion": "notoriously clunky", "sentiment": "Negative"},
+            {"aspect": "orchestral soundtrack", "opinion": "genuinely world-class", "sentiment": "Positive"},
+            {"aspect": "weapon banner", "opinion": "predatory and punishing", "sentiment": "Negative"},
+            {"aspect": "co-op multiplayer functionality", "opinion": "severely restricted and underbaked", "sentiment": "Negative"}
+        ]
+    },
+    "2": {
+        "reviews": [
+            "Zenless Zone Zero delivers stylish animations with exceptionally punchy combat impacts that make basic dodge-counters and chain attacks feel incredibly rewarding.",
+            "The original TV grid navigation mode was painfully slow and broke the momentum of gameplay, though recent patch adjustments made it much more bearable.",
+            "Character designs and distinct urban aesthetics are bursting with personality, easily standing out among modern action-oriented anime titles.",
+            "The hip-hop and electronic background music provides energetic rhythm that matches the frenetic tempo of Hollow combat encounters flawlessly.",
+            "Hollow Zero rogue-lite mode progression becomes repetitive and tedious once weekly point quotas are cleared, offering little build diversity.",
+            "English voice acting and facial sync in cinematic dialogue sequences are remarkably expressive, conveying genuine charm across the main sibling duo."
+        ],
+        "aspects": [
+            {"aspect": "combat impacts", "opinion": "exceptionally punchy", "sentiment": "Positive"},
+            {"aspect": "TV grid navigation mode", "opinion": "painfully slow", "sentiment": "Negative"},
+            {"aspect": "character designs", "opinion": "bursting with personality", "sentiment": "Positive"},
+            {"aspect": "urban aesthetics", "opinion": "bursting with personality", "sentiment": "Positive"},
+            {"aspect": "background music", "opinion": "energetic rhythm that matches the frenetic tempo", "sentiment": "Positive"},
+            {"aspect": "Hollow Zero rogue-lite mode progression", "opinion": "repetitive and tedious", "sentiment": "Negative"},
+            {"aspect": "English voice acting", "opinion": "remarkably expressive", "sentiment": "Positive"}
+        ]
+    },
+    "3": {
+        "reviews": [
+            "Elden Ring offers an astonishing sense of freedom and world discovery through the Lands Between, constantly rewarding curious players with hidden catacombs and unique armaments.",
+            "PC port optimization suffers from noticeable stuttering issues and lack of native ultrawide support, which disrupts what should otherwise be a seamless boss encounter.",
+            "Boss encounter difficulty strikes an exhilarating balance between brutal punishment and intense satisfaction once attack telegraph patterns are mastered.",
+            "Build variety and weapon ash of war customization provide virtually infinite replayability, allowing wildly different playstyles across successive playthroughs.",
+            "Questline tracking remains deliberately opaque and confusing without external wiki guides, causing players to accidentally lock out major NPC stories.",
+            "Legacy dungeon level design showcases masterclass environmental architecture with intricate shortcuts that reward methodical exploration."
+        ],
+        "aspects": [
+            {"aspect": "world discovery", "opinion": "sense of freedom", "sentiment": "Positive"},
+            {"aspect": "PC port optimization", "opinion": "noticeable stuttering issues", "sentiment": "Negative"},
+            {"aspect": "boss encounter difficulty", "opinion": "exhilarating balance", "sentiment": "Positive"},
+            {"aspect": "build variety", "opinion": "infinite replayability", "sentiment": "Positive"},
+            {"aspect": "questline tracking", "opinion": "deliberately opaque", "sentiment": "Negative"},
+            {"aspect": "legacy dungeon level design", "opinion": "masterclass environmental architecture", "sentiment": "Positive"}
+        ]
+    },
+    "4": {
+        "reviews": [
+            "Cyberpunk 2077's Night City environment presents an unmatched level of atmospheric detail and visual grandeur, especially with full path tracing enabled on high-end hardware.",
+            "Pedestrian AI behavior still feels immersion-breaking and lifeless when wandering off the designated story tracks into less detailed back alleys.",
+            "Narrative storytelling and voice acting deliver an emotionally gripping journey that makes the main cast of characters memorable long after the credits roll.",
+            "Vehicle handling physics and high-speed driving mechanics feel floaty and unresponsive on keyboard controls during tight street chases.",
+            "Cyberware progression and perk tree overhaul offer cohesive character builds, turning late-game mercenary combat into a power fantasy.",
+            "Police response system logic still spawns law enforcement unnaturally close to the player rather than delivering realistic vehicular pursuit."
+        ],
+        "aspects": [
+            {"aspect": "Night City environment", "opinion": "unmatched level of atmospheric detail", "sentiment": "Positive"},
+            {"aspect": "pedestrian AI behavior", "opinion": "immersion-breaking", "sentiment": "Negative"},
+            {"aspect": "narrative storytelling", "opinion": "emotionally gripping", "sentiment": "Positive"},
+            {"aspect": "voice acting", "opinion": "emotionally gripping", "sentiment": "Positive"},
+            {"aspect": "vehicle handling physics", "opinion": "floaty and unresponsive", "sentiment": "Negative"},
+            {"aspect": "cyberware progression", "opinion": "cohesive character builds", "sentiment": "Positive"},
+            {"aspect": "police response system logic", "opinion": "unnaturally close", "sentiment": "Negative"}
+        ]
+    }
+}

@@ -1,0 +1,157 @@
+seed: 42
+run_name: task_adapted
+limit: null   # max review rows (whole games are kept, seeded): null = all (~6.4M rows) | int, e.g. 5000 (smoke test) | 50000 (dev run) | 500000 (large run)
+
+paths:
+  raw_dir: data/raw
+  interim_dir: data/interim
+  processed_dir: data/processed
+  annotation_dir: annotation
+  outputs_dir: models/phase1   # trained runs: models/phase1/<run>/ (model_info.json + model/)
+  export_dir: data/output      # Phase 1 deliverables for Phase 2/3 and the annotators
+  game_context_file: data/phase1/game_context.parquet  # copy of interim/game_context.parquet (1.7 MB), kept in git so the API runs without data/interim
+
+reviews:
+  file: data/raw/steam_reviews/dataset.csv
+  columns:                                    # source column -> internal column
+    app_id: app_id
+    app_name: app_name
+    review_text: review_text
+    review_score: review_score
+    review_votes: review_votes
+
+# Rule-based quality filter. Rules run in this order. the first rule that fires is recorded.
+quality:
+  rules: [empty_or_placeholder, ascii_art, repeated_chars, repeated_words, too_short, duplicate_in_game, non_english]
+  min_tokens: 3
+  placeholders: ["early access review", "no review", "n/a", "na", "."]
+  max_nonalnum_ratio: 0.5     # ascii_art: share of non-alphanumeric, non-space characters
+  min_chars_ascii_art: 10
+  max_char_run: 8             # repeated_chars: a letter/digit repeated this many times in a row ...
+  max_repeated_char_share: 0.3  # ... and such runs make up at least this share of the letters/digits
+  repeat_min_words: 6         # repeated_words: only for reviews with at least this many words
+  min_unique_word_ratio: 0.3  # repeated_words: unique words / words below this fires the rule
+  language:
+    enabled: true
+    backend: fasttext         # fasttext (fast, ~50 us/review) | langdetect (~10 ms/review, too slow for millions)
+    model_path: data/raw/fasttext/lid.176.ftz   # downloaded automatically on first use
+    min_confidence: 0.7       # fasttext: only a confident non-English prediction rejects a review
+    target: en
+    min_chars: 40             # shorter texts (after removing URLs) are not language-checked: ID is unreliable on slang
+    max_chars: 300            # only the head of long reviews is passed to the detector
+
+# Step 3: game context
+context:
+  sources:
+    nikdavis:
+      steam_csv: data/raw/nikdavis/steam.csv
+      description_csv: data/raw/nikdavis/steam_description_data.csv
+      list_sep: ";"
+    artermiloff:
+      csv: data/raw/artemiloff/games_march2025_cleaned.csv   # folder is spelled "artemiloff" (the Kaggle slug is artermiloff)
+      list_format: pylist     # one of: pylist | json | semicolon | comma. Run inspect_sources() to verify.
+  low_info_categories:
+    - Steam Trading Cards
+    - Steam Cloud
+    - Steam Achievements
+    - Steam Leaderboards
+    - Steam Workshop
+    - Steam Turn Notifications
+    - Steam Input API
+    - Remote Play on Phone
+    - Remote Play on Tablet
+    - Remote Play on TV
+    - Remote Play Together
+    - Includes Source SDK
+    - Includes level editor
+    - Commentary available
+    - Captions available
+    - Partial Controller Support
+    - Full controller support
+    - Stats
+    - In-App Purchases
+    - Valve Anti-Cheat enabled
+    - SteamVR Collectibles
+  max_description_chars: 400
+  steam_api:
+    enabled: true
+    delay_s: 1.5
+    max_retries: 5
+    backoff_base_s: 10
+    cache_file: data/raw/steam_api/cache.jsonl
+    language: english
+
+# Step 4: sampling
+sampling:
+  max_reviews_per_game: 50
+  min_reviews_per_game: 10
+
+# Step 5: split by app_id
+split:
+  mode: group               # group | genre_holdout
+  ratios: [0.8, 0.1, 0.1]   # train / val / test
+  holdout_genres: []        # only for mode: genre_holdout (matched on each game's primary genre)
+
+# Step 6: pairs and labels
+pairs:
+  label_scheme: binary      # binary | graded
+  neg_per_pos: 2
+  hard_ratio: 0.5           # probability that a negative is a hard (shared-genre) negative
+  include_quality_reject: true
+  # Only rules that catch real junk. Left out on purpose: empty_or_placeholder (~80% of its rejects are the single string
+  # "Early Access Review") and too_short (it rejects genuine opinions like "Really fun" / "it sucks", which would teach
+  # the model that short opinions are off-topic).
+  quality_reject_rules: [ascii_art, repeated_chars, repeated_words]
+  quality_reject_ratio: 0.1 # quality_reject pairs as a share of positives (train/val only)
+
+# Step 7: annotation
+annotation:
+  gold_size: 600            # placeholder until the team decides
+  strata_weights: {positive: 0.5, hard_negative: 0.35, random_negative: 0.15}
+  allow_auto_labels: true   # when labeled.txt/.csv is missing, fall back to auto labels (flagged label_source=auto)
+
+# Step 8: models
+models:
+  lexical:
+    ngram_range: [1, 2]
+    min_df: 2
+  zero_shot:
+    model_name: facebook/bart-large-mnli
+    hypothesis_template: "This review is about the game: {context_text}"
+    max_length: 512
+    batch_size: 16
+    fp16: true
+  cross_encoder:
+    model_name: roberta-base  # or microsoft/deberta-v3-base (tight on 8 GB VRAM)
+    max_length: 256
+    batch_size: 16
+    grad_accum_steps: 2
+    epochs: 3
+    lr: 2.0e-5
+    weight_decay: 0.01
+    warmup_ratio: 0.06
+    fp16: true
+    max_train_pairs: 200000   # random subsample of the train pairs; null = use all (hours on an 8 GB laptop GPU)
+    max_val_pairs: 10000      # val subsample for per-epoch model selection and the threshold
+    eval_batch_size: 64
+
+evaluation:
+  relevant_min_label: 2     # graded scheme: gold label >= this counts as relevant for P/R/F1
+  threshold_grid: 101
+
+# Step 9: inference
+inference:
+  input: filtered           # filtered | sampled
+  # Quality-rule rejects added to the output with score 0.0 and rejected_by set (annotators can check them).
+  # duplicate_in_game is left out on purpose: those texts are already scored once.
+  include_rejected_rules: [empty_or_placeholder, ascii_art, repeated_chars, repeated_words, too_short, non_english]
+  max_rejected_per_game: 50
+  borderline_margin: 0.15   # score_band: off_topic < thr - m <= borderline < thr + m <= relevant
+  max_reviews_per_game: 500 # null = score everything (hours on a laptop GPU)
+  batch_size: 128
+
+# Step 10: deliverables in paths.export_dir (python -m src.phase1.inference.export_outputs)
+export:
+  top_k_per_game: 30        # reviews per game in phase2_input.json (highest score first)
+  min_reviews_per_game: 3   # games with fewer relevant reviews are left out of phase2_input.json
+  annotation_per_band: 100  # rows per score_band (+ rule rejects) in annotation_check.txt

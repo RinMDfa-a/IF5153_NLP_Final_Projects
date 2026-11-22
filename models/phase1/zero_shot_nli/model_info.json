@@ -1,0 +1,11 @@
+{
+  "type": "zero_shot",
+  "threshold": 0.0,
+  "zero_shot": {
+    "model_name": "facebook/bart-large-mnli",
+    "hypothesis_template": "This review is about the game: {context_text}",
+    "max_length": 512,
+    "batch_size": 16,
+    "fp16": true
+  }
+}

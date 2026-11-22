@@ -1,0 +1,30 @@
+{
+  "n": 600,
+  "threshold": 0.01,
+  "precision": 0.8132530120481928,
+  "recall": 0.45,
+  "f1": 0.5793991416309013,
+  "accuracy": 0.6733333333333333,
+  "by_pair_type": {
+    "random_negative": {
+      "n": 90,
+      "accuracy": 0.9111111111111111,
+      "share_predicted_relevant": 0.08888888888888889
+    },
+    "positive": {
+      "n": 300,
+      "accuracy": 0.45,
+      "share_predicted_relevant": 0.45
+    },
+    "hard_negative": {
+      "n": 210,
+      "accuracy": 0.8904761904761904,
+      "share_predicted_relevant": 0.10952380952380952
+    }
+  },
+  "run_name": "lexical_baseline",
+  "label_source": [
+    "auto"
+  ],
+  "val_f1_at_threshold": 0.5303341269189722
+}
