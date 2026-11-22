@@ -1,6 +1,6 @@
 {
   "type": "cross_encoder",
-  "threshold": 0.4,
+  "threshold": 0.41000000000000003,
   "model_dir": "model",
   "label_scheme": "binary",
   "base_model": "roberta-base"

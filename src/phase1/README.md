@@ -3,7 +3,15 @@
 Decides whether a Steam review talks about **its own game** (review = premise, game context = hypothesis) and returns a
 score in [0, 1]. Model: `roberta-base` cross-encoder fine-tuned on review/game pairs (test F1 0.79, precision 0.84,
 recall 0.74 on 600 pairs with auto labels; see `models/phase1/task_adapted/metrics.json`).
-Full spec and design notes: [CLAUDE.md](CLAUDE.md). BEAM diagram: [docs/phase1_beam.drawio](../../docs/phase1_beam.drawio).
+BEAM diagram: [docs/phase1_beam.drawio](../../docs/phase1_beam.drawio).
+
+Calling Phase 1 through ngrok (Phase 3 CLI → Phase 1 API), where the formats are written down:
+- **Expected input:** the request body of `POST /phase1/filter` (keyed `{"1": {"app_id", "reviews": [...]}}`), section
+  "POST /phase1/filter" in [docs/phase1_api.md](../../docs/phase1_api.md).
+- **Expected output:** the response of the same endpoint (`app_name`, `reviews`, `relevance_scores`, `scored`), same section of
+  [docs/phase1_api.md](../../docs/phase1_api.md). Error codes and a Python client example are further down in that file.
+- **Batch files instead of the API** (`phase2_input.json`, `relevant_reviews.csv`): see
+  [Outputs for Phase 2 / Phase 3 / annotators](#outputs-for-phase-2--phase-3--annotators) below.
 
 Everything runs from the **repository root**.
 
@@ -55,11 +63,11 @@ For `to_label.txt`, fill `gold_label` and save as `annotation/labeled.txt`, or S
 | `score_band` | score | typical content |
 |---|---|---|
 | `off_topic` | < 0.25 | memes and junk (quality rules, score exactly 0.0 with `rejected_by` set), text about something else |
-| `borderline` | 0.25 – 0.55 | generic reviews ("Nice game, would recommend") that fit almost any game. Annotators should look here first |
+| `borderline` | 0.25 - 0.55 | generic reviews ("Nice game, would recommend") that fit almost any game. Annotators should look here first |
 | `relevant` | ≥ 0.55 | reviews about this game's content |
 
-Checked on hand-written probes (`tests/phase1/test_probe.py`): junk = 0, game-specific reviews 0.94–0.998, generic reviews
-0.12–0.64 (around the threshold). Known weak spots:
+Checked on hand-written probes (`tests/phase1/test_probe.py`): junk = 0, game-specific reviews 0.94-0.998, generic reviews
+0.12-0.64 (around the threshold). Known weak spots:
 - Off-topic text that talks about Steam itself ("writing this review to get the badge…") can score high (0.65).
 - Recall is 0.74, so some relevant reviews end up in `off_topic` (e.g. short reviews of games with a thin store
   description). These are what `annotation_check.txt` is for. If the annotators find many of them, try the graded

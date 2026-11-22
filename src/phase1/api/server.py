@@ -3,10 +3,12 @@
     uvicorn src.phase1.api.server:app --port 8000        # from the repository root
     ngrok http 8000                                      # then PHASE_1_BASE_ENDPOINT=<ngrok url> in the CLI's .env
 
-Environment variables:
-  PHASE1_MODEL_DIR   model folder with model_info.json + model/      (default models/phase1/task_adapted)
+Environment variables (set them in the shell, or in `.env` at the repository root; see `.env.example`.
+A variable already set in the shell wins over `.env`):
+  PHASE1_MODEL_DIR  model folder with model_info.json + model/      (default models/phase1/task_adapted)
   PHASE1_CONFIG      config file                                       (default configs/phase1.yaml)
   PHASE1_API_KEY     if set, every /phase1/* request needs header `X-API-Key: <value>` (the ngrok URL is public)
+  PHASE1_MIN_SCORE   default score cut of /phase1/filter, 0..1 (unset = the model threshold; 0 = drop no review by score)
   PHASE1_STEAM_API   "0" disables the Steam Store API fallback for app_ids missing from game_context.parquet
 
 Endpoints (request/response examples in docs/phase1_api.md):
@@ -19,9 +21,11 @@ from __future__ import annotations
 import os
 import threading
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import Any
 
 import polars as pl
+from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -29,6 +33,8 @@ from src.phase1.inference.predict import predict_df
 from src.phase1.utils.context_text import filter_categories, make_context_text, split_semicolon, truncate_description
 from src.phase1.utils.io import load_config, resolve
 from src.phase1.utils.text_clean import strip_html
+
+load_dotenv(Path(__file__).resolve().parents[3] / ".env")  # repo root; does not override variables already set in the shell
 
 MAX_REVIEWS_PER_REQUEST = 5000
 
@@ -149,6 +155,10 @@ def create_app(model=None, cfg: dict | None = None, game_context: pl.DataFrame |
         app.state.cfg, app.state.model = conf, mdl
         app.state.contexts = ContextStore(gc, conf, steam)
         app.state.api_key = api_key if api_key is not None else os.environ.get("PHASE1_API_KEY") or None
+        raw_min = os.environ.get("PHASE1_MIN_SCORE", "").strip()
+        app.state.min_score = float(raw_min) if raw_min else None  # None = use the model threshold
+        if app.state.min_score is not None and not 0 <= app.state.min_score <= 1:
+            raise ValueError(f"PHASE1_MIN_SCORE must be between 0 and 1, got {raw_min!r}")
         app.state.score_lock = threading.Lock()  # one GPU batch at a time
         yield
 
@@ -187,7 +197,7 @@ def create_app(model=None, cfg: dict | None = None, game_context: pl.DataFrame |
     @app.post("/phase1/filter", dependencies=[Depends(_check_key)])
     def filter_games(games: dict[str, GameIn], request: Request,
                      top_k: int | None = Query(None, ge=1, description="keep at most this many reviews per game"),
-                     min_score: float | None = Query(None, ge=0, le=1, description="default: the model threshold"),
+                     min_score: float | None = Query(None, ge=0, le=1, description="default: PHASE1_MIN_SCORE, else the model threshold"),
                      include_scored: bool = Query(True, description="also return every review with its score")
                      ) -> dict[str, dict[str, Any]]:
         if not games:
@@ -195,7 +205,8 @@ def create_app(model=None, cfg: dict | None = None, game_context: pl.DataFrame |
         if sum(len(g.reviews) for g in games.values()) > MAX_REVIEWS_PER_REQUEST:
             raise HTTPException(413, f"at most {MAX_REVIEWS_PER_REQUEST} reviews per request")
         store: ContextStore = request.app.state.contexts
-        cut = min_score if min_score is not None else request.app.state.model.threshold
+        default_cut = request.app.state.min_score
+        cut = min_score if min_score is not None else (default_cut if default_cut is not None else request.app.state.model.threshold)
 
         keys, texts, ctxs, names = [], [], [], {}
         for key, g in games.items():

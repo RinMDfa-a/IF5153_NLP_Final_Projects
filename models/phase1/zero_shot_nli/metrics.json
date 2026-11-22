@@ -6,11 +6,6 @@
   "f1": 0.6666666666666666,
   "accuracy": 0.5,
   "by_pair_type": {
-    "positive": {
-      "n": 300,
-      "accuracy": 1.0,
-      "share_predicted_relevant": 1.0
-    },
     "hard_negative": {
       "n": 210,
       "accuracy": 0.0,
@@ -19,6 +14,11 @@
     "random_negative": {
       "n": 90,
       "accuracy": 0.0,
+      "share_predicted_relevant": 1.0
+    },
+    "positive": {
+      "n": 300,
+      "accuracy": 1.0,
       "share_predicted_relevant": 1.0
     }
   },
