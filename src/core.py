@@ -13,7 +13,9 @@ def NLI(app_id: int, reviews: list[str]):
                             headers={"X-API-Key": settings.PHASE1_API_KEY})
         resp.raise_for_status()
         phase2_input = {k: {"app_name": g["app_name"], "reviews": g["reviews"]} for k, g in resp.json().items()}
-        return phase2_input["1"]["app_name"], phase2_input["1"]["reviews"]
+        if len(phase2_input["1"]["reviews"]) == 0:
+            return None, None
+        else: return phase2_input["1"]["app_name"], phase2_input["1"]["reviews"]
     except requests.exceptions.HTTPError as erh:
         print(erh)
         raise
@@ -52,13 +54,16 @@ def Summarizer(app_name: str, aspects: list[dict], reviews: list[str]) -> str:
 def Pipeline(app_id, reviews):
     print("Processing NLI:")
     app_name, reviews = NLI(app_id, reviews)
-    print("\n")
-    print("ABSA:")
-    app_name, aspects, reviews = ABSA(app_name, reviews)
-    print("\n")
-    print("Summarizer:")
-    summary = Summarizer(app_name, aspects, reviews)
-    print("\n")
-    return summary
+    if app_name is None:
+        return "No reviews"
+    else:
+        print("\n")
+        print("ABSA:")
+        app_name, aspects, reviews = ABSA(app_name, reviews)
+        print("\n")
+        print("Summarizer:")
+        summary = Summarizer(app_name, aspects, reviews)
+        print("\n")
+        return summary
 
     
