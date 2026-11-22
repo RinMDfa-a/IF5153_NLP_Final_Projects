@@ -56,9 +56,10 @@ Make sure you have uv environment being installed on your device. For uv install
 
 1. Task 1: Have set of semi-structured data that being classified based on "review_id", "app_id", "app_name", "review_text", "relevance_score", "is_relevant", "score_band", "model_run" which have being scored on "relevance_score" from 0-0.4 is being off topic, 0.4-0.7 is being borderline, and 0.7 above is being relevant
 
-| index | review_id | app_id | app_name | ... | score_band | rejected_by | model_run |
-| 0 | 3832200 | 302380 | Floating Point | ... | borderline | NaN | task_adapted
-| 1 | 2124809 | 238320 | Outlast | ... | borderline | NaN | task_adapted
+| index | review_id | app_id | app_name       | ... | score_band | rejected_by | model_run    |
+| ----- | --------- | ------ | -------------- | --- | ---------- | ----------- | ------------ |
+| 0     | 3832200   | 302380 | Floating Point | ... | borderline | NaN         | task_adapted |
+| 1     | 2124809   | 238320 | Outlast        | ... | borderline | NaN         | task_adapted |
 
 2. Task 2: Have set of semi-structured data that being classified based on "app_name", "review_text", "aspects", "raw_prediction"
 
