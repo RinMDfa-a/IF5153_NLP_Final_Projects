@@ -51,6 +51,18 @@ def Summarizer(app_name: str, aspects: list[dict], reviews: list[str]) -> str:
         print(erh)
         raise
 
+def EntailmentScore(premises: list[str], hypothesis: list[str]) -> float:
+    try:
+        resp = requests.post(
+            f"{settings.PHASE_3_BASE_ENDPOINT}/entailment_score",
+            json={"premises": premises, "hypothesis": hypothesis},
+        )
+        resp.raise_for_status()
+        return resp.json()["score"]
+    except requests.exceptions.HTTPError as erh:
+        print(erh)
+        raise
+
 def Pipeline(app_id, reviews):
     print("=" * 60)
     print(f"[Phase 1: NLI Filter] Input reviews: {len(reviews)}")
@@ -77,8 +89,15 @@ def Pipeline(app_id, reviews):
     print("[Phase 3: Summarizer]")
     print("=" * 60)
     summary = Summarizer(app_name, aspects, absa_reviews)
-    print(json.dumps(summary, indent=2, ensure_ascii=False))
+    print(json.dumps(summary, indent=2))
+
+    print("\n" + "=" * 60)
+    print("[Phase 3: Entailment Score]")
     print("=" * 60)
-    return summary
+    ground_text = "\n".join(f"- {str(r).strip()}" for r in absa_reviews)
+    score = EntailmentScore([ground_text], [summary["msg"]])
+    print(f"Entailment Score: {score:.4f}")
+    print("=" * 60)
+    return summary['msg']
 
     

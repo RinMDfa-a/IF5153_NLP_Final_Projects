@@ -30,7 +30,8 @@ def menu() -> None:
 def demo_menu() -> None:
     print("Tekan angka yang tersedia untuk melakukan aksi:")
     print("1. Pipeline keseluruhan")
-    print("2. Kembali")
+    print("2. Cek Entailment Score")
+    print("3. Kembali")
 
     choice = input_handler(demo_menu)
     router(choice, demo_menu)
@@ -47,7 +48,9 @@ def router(choice: any, func: object) -> None:
                 sys.exit()
         case f if f is Functions.DEMO_MENU.name:
             if choice == 1:
-                Pipeline_menu() 
+                Pipeline_menu()
+            elif choice == 2:
+                Entailment_menu()
             else:
                 menu()
         
@@ -81,9 +84,22 @@ def input_handler(func: object):
         case f if f is Functions.MENU.name:
             return input_retryer(["1", "2"])
         case f if f is Functions.DEMO_MENU.name:
-            return input_retryer(["1", "2"])
+            return input_retryer(["1", "2", "3"])
         case f if f is Functions.PIPELINE_MENU.name:
                     return input_retryer(["1", "2"])
+
+def Entailment_menu():
+    print("Masukkan teks premise (reviews):")
+    premise = input().rstrip()
+    print("Masukkan teks hypothesis (summary):")
+    hypothesis = input().rstrip()
+    try:
+        score = EntailmentScore([premise], [hypothesis])
+        print(f"Entailment Score: {score:.4f}")
+    except requests.exceptions.HTTPError as e:
+        print(e)
+
+    action_transition()
 
 def Pipeline_menu():
     print("Tekan angka yang tersedia untuk melakukan aksi:")
